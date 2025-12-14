@@ -1,0 +1,71 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Book Details - {{ book.title }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <h1 class="display-4">{{ book.title }}</h1>
+        <a href="{% url 'book_list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i> Back to Catalog
+        </a>
+    </div>
+
+    <div class="row">
+        
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg h-100 border-0 rounded-3">
+                <div class="card-body p-0">
+                    {% if book.image %}
+                        <img src="{{ book.image.url }}" class="img-fluid rounded-3" 
+                             alt="{{ book.title }} Cover" style="max-height: 450px; object-fit: contain; width: 100%;">
+                    {% else %}
+                        <img src="https://via.placeholder.com/600x900?text=No+Cover+Available" 
+                             class="img-fluid rounded-3 placeholder-bg" alt="No Image Available" 
+                             style="max-height: 450px; object-fit: contain; width: 100%;">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm h-100 border-0 rounded-3 p-4">
+                
+                <h2 class="h5 mb-3 text-primary">Metadata</h2>
+                <dl class="row mb-4">
+                    <dt class="col-sm-3 text-muted">Author:</dt>
+                    <dd class="col-sm-9 fw-bold">{{ book.author }}</dd>
+
+                    <dt class="col-sm-3 text-muted">Published Date:</dt>
+                    <dd class="col-sm-9">{{ book.published_date }}</dd>
+
+                    {% if book.isbn %} 
+                    <dt class="col-sm-3 text-muted">ISBN:</dt>
+                    <dd class="col-sm-9">{{ book.isbn }}</dd>
+                    {% endif %}
+                    
+                    {% if book.genre %}
+                    <dt class="col-sm-3 text-muted">Genre:</dt>
+                    <dd class="col-sm-9">{{ book.genre }}</dd>
+                    {% endif %}
+                </dl>
+                
+                <h2 class="h5 mb-3 text-primary border-top pt-3">Synopsis</h2>
+                <p class="lead text-secondary">{{ book.description|default:"No description provided."|linebreaks }}</p>
+                
+                <div class="mt-auto pt-3 border-top">
+                    <div class="btn-group w-100 w-md-auto" role="group">
+                        <a href="{% url 'book_update' book.pk %}" class="btn btn-warning btn-lg flex-fill">
+                            <i class="bi bi-pencil-square me-2"></i> Edit Book Details
+                        </a>
+                        <a href="{% url 'book_delete' book.pk %}" class="btn btn-danger btn-lg flex-fill">
+                            <i class="bi bi-trash me-2"></i> Delete Book
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
