@@ -4,14 +4,10 @@ import os
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# --- SECURITY ---
+# SECURITY: Use environment variables for production
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-local-key')
-
-# Set to False in real production, but keeping True as per your request for debugging
-DEBUG = True 
-
-# UPDATED: Added Vercel domains to ALLOWED_HOSTS
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app', '.now.sh']
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 
 # Application definition
 INSTALLED_APPS = [
@@ -21,12 +17,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'myapp',  # Your local app
+    'myapp',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # Added for Vercel static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # For serving static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -40,7 +36,7 @@ ROOT_URLCONF = 'my_django_app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [], 
+        'DIRS': [],  # Use app-level templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -54,7 +50,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'my_django_app.wsgi.application'
 
-# Database: SQLite (Note: Data will reset on Vercel redeploys)
+# Database: SQLite for small project
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -72,10 +68,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# UPDATED: Configure WhiteNoise for production efficiency
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# Media files
+# Media files (book images, uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

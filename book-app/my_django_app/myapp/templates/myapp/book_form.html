@@ -1,0 +1,77 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if form.instance.pk %}Edit Book{% else %}Add Book{% endif %} - Book Manager
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            
+            <div class="card shadow-lg border-0 rounded-4">
+                
+                <div class="card-header bg-primary text-white rounded-top-4 py-3">
+                    <h3 class="card-title text-center mb-0">
+                        <i class="fas fa-edit me-2"></i> 
+                        {% if form.instance.pk %}Edit Book Record{% else %}Add New Book{% endif %}
+                    </h3>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+                            <label for="id_title" class="form-label fw-bold">Title</label>
+                            <input type="text" class="form-control" id="id_title" name="title"
+                                   value="{{ form.title.value|default_if_none:'' }}" placeholder="Enter book title" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_author" class="form-label fw-bold">Author</label>
+                            <input type="text" class="form-control" id="id_author" name="author"
+                                   value="{{ form.author.value|default_if_none:'' }}" placeholder="Enter author's name" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_description" class="form-label fw-bold">Description</label>
+                            <textarea class="form-control" id="id_description" name="description" rows="4" 
+                                      placeholder="Brief description of the book">{{ form.description.value|default_if_none:'' }}</textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_image" class="form-label fw-bold">Book Cover Image</label>
+                            <input type="file" class="form-control" id="id_image" name="image">
+                            
+                            {% if form.instance.image %}
+                                <div class="mt-2">
+                                    <small class="text-muted d-block">Current image:</small>
+                                    <a href="{{ form.instance.image.url }}" target="_blank">
+                                        <img src="{{ form.instance.image.url }}" alt="Current Cover" class="img-thumbnail" style="max-height: 80px;">
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-between pt-3 border-top mt-4">
+                            <button type="submit" class="btn btn-lg 
+                                {% if form.instance.pk %}btn-success{% else %}btn-primary{% endif %} shadow-sm">
+                                <i class="fas fa-save me-2"></i> 
+                                {% if form.instance.pk %}Update{% else %}Add Book{% endif %}
+                            </button>
+                            
+                            <a href="{% url 'book_list' %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}
